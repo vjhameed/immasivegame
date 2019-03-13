@@ -1,0 +1,77 @@
+.nk-footer .form-control{
+    padding: 6.5px 10px;
+    font-size: 0.9em;
+    font-weight: 400;
+    color: #fff;
+    background-color: transparent;
+    border: 1px solid #303e47;
+    border-radius: 0;
+    -webkit-transition: .15s border-color;
+    -o-transition: .15s border-color;
+    transition: .15s border-color;
+    outline: none;
+    resize: none
+}
+
+.nk-footer{
+    position: relative;
+    overflow: hidden;
+    color: #eee;
+    background-color: rgba(17,22,25,.8);
+    z-index: 1;
+    background-image: url('https://cdn-html.nkdev.info/goodgames/assets/images/bg-bottom.png')
+}
+
+.nk-copyright{
+    background: #000
+}
+
+.nk-copyright .nk-copyright-left{
+    padding: 25px 0
+}
+.nk-copyright .nk-copyright-right{
+    padding: 21px 0;
+    margin-left: auto;
+}
+
+.nk-social-links-2{
+    margin-right: -4px;
+    margin-left: -4px;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    margin-right: -2px;
+    margin-left: -2px;
+    list-style-type: none;
+}
+.nk-social-links-2>li>*{
+    width: 26px !important;
+    height: 26px !important;
+    margin: 3px 5px;
+    font-size: 1.1em;
+    line-height: 26px;
+    background-color: #fff;
+    border-radius: 13px;
+    color: #171e22;
+    display: block;
+    text-align: center;
+    cursor: pointer
+}
+
+.nk-footer .svg-inline--fa.fa-w-14{
+    width: .875em;
+}
+
+.nk-footer .svg-inline--fa{
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -.125em;
+        position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+

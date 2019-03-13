@@ -1,0 +1,23 @@
+/* .fade-carousel{
+    height: 70%
+}
+
+.fade-carousel > div{
+    height: 100%
+}
+
+.cat-page .slick-slide{
+    height: 100% !important
+} */
+
+.cat-page.fade-carousel{
+    height: 400px
+}
+
+.cat-page.fade-carousel > div{
+    height: 100%
+}
+
+.cat-page .slick-slide{
+    height: 100% !important
+}

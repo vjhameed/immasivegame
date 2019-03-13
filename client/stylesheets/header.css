@@ -1,0 +1,320 @@
+.front-site-navbar {
+  position: fixed;
+  font-family: Antonio-Bold;
+  font-size: 16px;
+  padding: 32px 40px 10px 40px;
+  color: white;
+  align-items: center;
+  background: transparent;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  transition: all 500ms;
+  -webkit-transition: all 500ms;
+  -moz-transition: all 500ms;
+  -ms-transition: all 500ms;
+  -o-transition: all 500ms;
+}
+
+.front-site-navbar.darkHeader {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.front-site-navbar .navbar-links {
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.front-site-navbar .nav-item:first-of-type {
+  margin-left: 40px;
+}
+
+.front-site-navbar .nav-item {
+  margin-right: 25px;
+  display: inline-block;
+}
+
+.front-site-navbar .nav-item .nav-link {
+  color: white !important;
+  transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.front-site-navbar .nav-item .nav-link:hover {
+  color: #dd163b !important;
+}
+
+.front-site-navbar .nav-item.active .nav-link {
+  color: #dd163b !important;
+}
+
+.front-site-navbar .navbar-brand {
+  margin-right: 0;
+}
+
+.front-site-navbar .navbar-brand img {
+  height: 80px;
+}
+
+.front-site-navbar .glory-header-button {
+  letter-spacing: 1px;
+  line-height: 50px;
+  width: 170px;
+  padding: 0;
+  border-radius: 0;
+  transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  font-size: 0.8888888889rem;
+  color: #f0f0f0;
+  background: transparent;
+  border: 1px solid;
+  margin-top: -0.6em;
+  -moz-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -ms-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 0.55s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.menu-button {
+  width: 26px;
+  height: 32px;
+  margin-left: 1.5em;
+  cursor: pointer;
+}
+
+.menu-button span {
+  width: 100%;
+  height: 3px;
+  display: block;
+  margin-bottom: 8px;
+  background: #f0f0f0;
+  transition: 200ms all ease-in-out;
+  -webkit-transition: 200ms all ease-in-out;
+  -moz-transition: 200ms all ease-in-out;
+  -ms-transition: 200ms all ease-in-out;
+  -o-transition: 200ms all ease-in-out;
+}
+
+.menu-button span:last-child {
+  margin-bottom: 0;
+}
+
+.menu-button.active span,
+.menu-button:hover span {
+  background-color: #dd163b !important;
+}
+
+#signinbutton {
+  color: white;
+  border: none;
+  outline: none;
+  font-size: 24px;
+  font-weight: 200;
+  overflow: hidden;
+  position: relative;
+  border-radius: 2px;
+  letter-spacing: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  text-transform: uppercase;
+  background-color: #00a7ee;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+#signinbutton .btn-text {
+  z-index: 2;
+  display: block;
+  padding: 10px 20px;
+  position: relative;
+}
+
+#signinbutton .btn-text:hover {
+  cursor: pointer;
+}
+
+#signinbutton:after {
+  top: -50%;
+  z-index: 1;
+  content: "";
+  width: 150%;
+  height: 200%;
+  position: absolute;
+  left: calc(-150% - 40px);
+  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-transform: skewX(-40deg);
+  -moz-transform: skewX(-40deg);
+  -ms-transform: skewX(-40deg);
+  -o-transform: skewX(-40deg);
+  transform: skewX(-40deg);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+#signinbutton:hover {
+  cursor: default;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+#signinbutton:hover:after {
+  -webkit-transform: translateX(100%) skewX(-30deg);
+  -moz-transform: translateX(100%) skewX(-30deg);
+  -ms-transform: translateX(100%) skewX(-30deg);
+  -o-transform: translateX(100%) skewX(-30deg);
+  transform: translateX(100%) skewX(-30deg);
+}
+
+#signinbutton.active {
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+#signinbutton.active .modal {
+  -webkit-transform: scale(1, 1);
+  -moz-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+#signinbutton .modal {
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: inherit;
+  transform-origin: center center;
+  background-image: linear-gradient(
+    to top left,
+    #00a7ee 10%,
+    #5cf 65%,
+    white 200%
+  );
+  -webkit-transform: scale(0, 1e-5);
+  -moz-transform: scale(0, 1e-5);
+  -ms-transform: scale(0, 1e-5);
+  -o-transform: scale(0, 1e-5);
+  transform: scale(0, 1e-5);
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+#signinbutton .close-button {
+  top: 20px;
+  right: 20px;
+  position: absolute;
+  -webkit-transition: opacity 0.2s ease-in;
+  -moz-transition: opacity 0.2s ease-in;
+  -ms-transition: opacity 0.2s ease-in;
+  -o-transition: opacity 0.2s ease-in;
+  transition: opacity 0.2s ease-in;
+}
+
+#signinbutton .close-button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#signinbutton .form-title {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#signinbutton .form-button {
+  width: 100%;
+  padding: 7px;
+  color: #00a7ee;
+  margin-top: 10px;
+  max-width: 400px;
+  text-align: center;
+  border: solid 1px white;
+  background-color: white;
+  -webkit-transition: color 0.2s ease-in, background-color 0.2s ease-in;
+  -moz-transition: color 0.2s ease-in, background-color 0.2s ease-in;
+  -ms-transition: color 0.2s ease-in, background-color 0.2s ease-in;
+  -o-transition: color 0.2s ease-in, background-color 0.2s ease-in;
+  transition: color 0.2s ease-in, background-color 0.2s ease-in;
+}
+
+#signinbutton .form-button:hover {
+  color: white;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+#signinbutton .input-group {
+  width: 100%;
+  font-size: 16px;
+  max-width: 400px;
+  padding-top: 20px;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+#signinbutton .input-group input {
+  width: 100%;
+  color: white;
+  border: none;
+  outline: none;
+  padding: 13px 15px;
+  line-height: 1;
+  font-size: 16px;
+  font-family: "Raleway";
+  border-bottom: solid 1px white;
+  background-color: transparent;
+  -webkit-transition: box-shadow 0.2s ease-in;
+  -moz-transition: box-shadow 0.2s ease-in;
+  -ms-transition: box-shadow 0.2s ease-in;
+  -o-transition: box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in;
+}
+
+#signinbutton .input-group input + label {
+  left: 0;
+  top: 30px;
+  position: absolute;
+  pointer-events: none;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+#signinbutton .input-group input:focus {
+  box-shadow: 0 1px 0 0 white;
+}
+
+#signinbutton .input-group input:focus + label,
+#signinbutton .input-group input.active + label {
+  font-size: 12px;
+  -webkit-transform: translateY(-15px);
+  -moz-transform: translateY(-15px);
+  -ms-transform: translateY(-15px);
+  -o-transform: translateY(-15px);
+  /* top: -15px */
+  transform: translateY(-15px);
+}
+
+.login-link-change {
+  font-size: 0.8em;
+  display: inline-block;
+}

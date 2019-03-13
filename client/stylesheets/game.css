@@ -1,0 +1,48 @@
+.top-ad-banner{
+    margin-top: 80px !important;
+}
+
+.game-header-top.nk-decorated-h-2::before, .game-header-top.nk-decorated-h::before{
+    flex:38%
+}
+
+.game-window{
+    width: 100%;
+    height: 500px;
+    background: rgba(0,0,0,0.6);
+    margin: 1.5em 0px
+}
+
+.author-name{
+    color: #dd163b!important;
+    font-weight: bold;
+    text-transform: uppercase
+}
+
+.author-section{
+        background-color: rgba(0,0,0,0.3);
+    border: 3px solid #293139;
+}
+
+.game-item{
+    position: relative
+}
+
+.game-item .short-name{
+    color: white;
+    background: rgba(0,0,0,0.6);
+    position: absolute;
+    bottom: 0;
+    display:block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3em;
+    right: 0.8em;
+    left: 0.85em;
+    padding: 0.3em;
+}
+
+.game-item .short-img{
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}

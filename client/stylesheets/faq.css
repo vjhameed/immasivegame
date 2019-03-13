@@ -1,0 +1,31 @@
+.faq-cont > div{
+    background-color: white;
+    margin: 70px 0;
+}
+
+.faq-header{
+    font-size: 1.7em;
+    text-align: center;
+    color: black;
+    font-weight:600;
+    border: 1px solid #293139 
+}
+
+.faq-item{
+    color: black !important;
+    font-weight: bold;
+    border: 1px solid #293139 
+}
+
+.faq-item p{
+    font-weight: normal;
+    width: 92%;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.faq-item span{
+    color: #dd163b !important;
+    font-size: 1.1em;
+    margin-right: 1.5em
+}
