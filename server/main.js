@@ -7,10 +7,10 @@ import "../imports/api/users/tasks";
 //   Links.insert({ title, url, createdAt: new Date() });
 // }
 
-// Accounts.onCreateUser((options, user) => {
-//   Meteor.setTimeout(function() {
-//     Roles.addUsersToRoles(user._id, "simple-new-user");
-//   }, 0);
+Accounts.onCreateUser((options, user) => {
+  Meteor.setTimeout(function() {
+    Roles.addUsersToRoles(user._id, "simple-new-user");
+  }, 0);
 
 //   return user;
 // });
