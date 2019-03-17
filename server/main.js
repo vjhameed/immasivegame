@@ -12,8 +12,8 @@ Accounts.onCreateUser((options, user) => {
     Roles.addUsersToRoles(user._id, "simple-new-user");
   }, 0);
 
-//   return user;
-// });
+  return user;
+});
 
 Meteor.startup(() => {
   // var users = [
