@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -8,17 +8,23 @@ import {
   Switch
 } from "react-router-dom";
 import AppContainer from "../ui/container/AppContainer";
-import DashContainer from "../ui/container/DashContainer";
-import ScrollToTop from "../ui/components/ScrollToTop";
 import PrivateRoute from "../ui/components/PrivateRoute";
-
-export const renderRoutes = () => (
-  <Router onUpdate={() => window.scrollTo(0, 0)}>
-    <ScrollToTop>
-      <Switch>
-        <PrivateRoute path="/dash" component={DashContainer} />
-        <Route path="/" component={AppContainer} />
-      </Switch>
-    </ScrollToTop>
-  </Router>
-);
+import DashContainer from "../ui/container/DashContainer";
+import UserContainer from "../ui/container/UserContainer";
+import ScrollToTop from "../ui/components/ScrollToTop";
+export default class RenderRoutes extends Component {
+  render() {
+    const { user } = this.props;
+    return (
+      <Router onUpdate={() => window.scrollTo(0, 0)}>
+        <ScrollToTop>
+          <Switch>
+            <PrivateRoute path="/dash" component={DashContainer} />
+            <PrivateRoute path="/user" component={UserContainer} />
+            <Route path="/" component={AppContainer} />
+          </Switch>
+        </ScrollToTop>
+      </Router>
+    );
+  }
+}

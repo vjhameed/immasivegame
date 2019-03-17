@@ -25,7 +25,7 @@ class Sidebar extends Component {
             <div className="nav-border b-primary" data-nav>
               <ul className="nav bg">
                 <li className="nav-header hidden-folded">
-                  <span>Main</span>
+                  <span>User Dashboard</span>
                 </li>
                 <li>
                   <Link to={"/dash"} className="i-con-h-a">

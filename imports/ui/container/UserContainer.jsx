@@ -1,16 +1,12 @@
 import React, { Component, PropTypes } from "react";
 import { Route, Redirect } from "react-router-dom";
-import IndexPage from "../dashboard/pages/IndexPage";
 import Header from "../dashboard/components/Header";
-import Sidebar from "../dashboard/components/Sidebar";
-import CategoryPage from "../dashboard/pages/CategoryPage";
-import GamesPage from "../dashboard/pages/GamesPage";
-import NewsPage from "../dashboard/pages/NewsPage";
+import Sidebar from "../userdashboard/components/Sidebar";
 import { Meteor } from "meteor/meteor";
 import { createContainer } from "meteor/react-meteor-data";
 import { Roles } from "meteor/alanning:roles";
 
-class DashContainer extends Component {
+class UserContainer extends Component {
   constructor(props) {
     super(props);
     document.body.classList.remove("front-site");
@@ -19,7 +15,7 @@ class DashContainer extends Component {
 
   authenticateSecure() {
     const { user } = this.props;
-    if (user && Roles.userIsInRole(user._id, "admin")) {
+    if (user && Roles.userIsInRole(user._id, "simple-new-user")) {
       {
         return (
           <div>
@@ -28,17 +24,12 @@ class DashContainer extends Component {
             <div id="main" className="layout-row flex">
               <Sidebar />
 
-              <div id="content" className="flex ">
-                <Route exact path="/dash" component={IndexPage} />
-                <Route exact path="/dash/categories" component={CategoryPage} />
-                <Route exact path="/dash/games" component={GamesPage} />
-                <Route exact path="/dash/news" component={NewsPage} />
-              </div>
+              <div id="content" className="flex " />
             </div>
           </div>
         );
       }
-    } else if (user && !Roles.userIsInRole(user._id, "admin")) {
+    } else if (user && !Roles.userIsInRole(user._id, "simple-new-user")) {
       return <Redirect to={"/"} />;
     } else {
       return <div />;
@@ -53,4 +44,4 @@ class DashContainer extends Component {
 export default createContainer(() => {
   const user = Meteor.user() || null;
   return { user };
-}, DashContainer);
+}, UserContainer);

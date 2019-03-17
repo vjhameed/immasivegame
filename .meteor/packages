@@ -22,3 +22,4 @@ react-meteor-data       # React higher-order component for reactively tracking M
 jquery
 lookback:body-class
 accounts-password
+alanning:roles

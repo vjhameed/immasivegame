@@ -1,31 +1,36 @@
-import { Meteor } from 'meteor/meteor';
-import Links from '/imports/api/links';
+import { Meteor } from "meteor/meteor";
+import Links from "/imports/api/links";
+import { Roles } from "meteor/alanning:roles";
+import "../imports/api/users/tasks";
 
-function insertLink(title, url) {
-  Links.insert({ title, url, createdAt: new Date() });
-}
+// function insertLink(title, url) {
+//   Links.insert({ title, url, createdAt: new Date() });
+// }
+
+// Accounts.onCreateUser((options, user) => {
+//   Meteor.setTimeout(function() {
+//     Roles.addUsersToRoles(user._id, "simple-new-user");
+//   }, 0);
+
+//   return user;
+// });
 
 Meteor.startup(() => {
-  // If the Links collection is empty, add some data.
-  if (Links.find().count() === 0) {
-    insertLink(
-      'Do the Tutorial',
-      'https://www.meteor.com/tutorials/react/creating-an-app'
-    );
-
-    insertLink(
-      'Follow the Guide',
-      'http://guide.meteor.com'
-    );
-
-    insertLink(
-      'Read the Docs',
-      'https://docs.meteor.com'
-    );
-
-    insertLink(
-      'Discussions',
-      'https://forums.meteor.com'
-    );
-  }
+  // var users = [
+  //   {
+  //     name: "Hameed Khan",
+  //     email: "hameed@immasive.com",
+  //     roles: ["admin"]
+  //   }
+  // ];
+  // var id, user;
+  // id = Accounts.createUser({
+  //   email: users[0].email,
+  //   password: "securesystem",
+  //   profile: { name: users[0].name }
+  // });
+  // // email verification
+  // Meteor.users.update({ _id: id }, { $set: { "emails.0.verified": true } });
+  // Roles.addUsersToRoles(id, users[0].roles);
+  // console.log(Roles.userIsInRole(id, "admin"));
 });

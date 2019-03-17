@@ -19,7 +19,12 @@ export const LoginForm = props => {
   } = props;
 
   return (
-    <form onSubmit={handleSubmit} noValidate autoComplete="off" className='justify-content-center'>
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      autoComplete="off"
+      className="justify-content-center"
+    >
       <div className="form-title">Sign In</div>
 
       <span className="d-block text-center has-error text-danger">
@@ -27,7 +32,6 @@ export const LoginForm = props => {
       </span>
 
       <div className="input-group ">
-
         <input
           type="text"
           id="email"

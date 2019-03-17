@@ -14,8 +14,8 @@ export default class AppContainer extends Component {
   constructor(props, context) {
     super(props, context);
     AOS.init();
-    document.body.classList.add('front-site')
-    document.body.classList.remove('layout-column')
+    document.body.classList.add("front-site");
+    document.body.classList.remove("layout-column");
   }
   componentWillReceiveProps() {
     AOS.refresh();
