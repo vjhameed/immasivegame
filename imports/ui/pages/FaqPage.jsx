@@ -1,17 +1,14 @@
-import React, { Component } from 'react'
-import TopadBanner from '../components/TopadBanner';
-import Faqitem from '../components/Faqitem';
+import React, { Component } from "react";
+import TopadBanner from "../components/TopadBanner";
+import Faqitem from "../components/Faqitem";
 
 export default class FaqPage extends Component {
   render() {
     return (
-      <div className="container mt-5 pt-5 p-4  body-cont faq-cont">
-
+      <div className="container pt-5 p-4  body-cont faq-cont">
         <TopadBanner />
-        <div className='card-1'>
-          <div className="faq-header p-3 ">
-            Welcome TO immasive FAQ page
-                    </div>
+        <div className="card-1">
+          <div className="faq-header p-3 ">Welcome TO immasive FAQ page</div>
           <Faqitem />
           <Faqitem />
           <Faqitem />
@@ -19,9 +16,8 @@ export default class FaqPage extends Component {
           <Faqitem />
           <Faqitem />
           <Faqitem />
-
         </div>
       </div>
-    )
+    );
   }
 }

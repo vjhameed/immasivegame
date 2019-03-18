@@ -1,8 +1,46 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router";
-import { Route, Link } from "react-router-dom";
+import Categories from "../../../api/Categories/model";
+import { Meteor } from "meteor/meteor";
+import { createContainer } from "meteor/react-meteor-data";
 
 class CategoryPage extends Component {
+  state = {
+    catvalue: "",
+    caterror: "",
+    deletecat: []
+  };
+
+  createNewCat(e) {
+    e.preventDefault();
+    const parent = this;
+    Meteor.call("catCreate", this.state.catvalue, function(err, resp) {
+      if (err) parent.setState({ caterror: err.error });
+      if (resp) console.log("yeah success");
+    });
+  }
+
+  setCatDelete(e) {
+    const inputval = e.target.value;
+    const checked = e.target.checked;
+    if (checked) {
+      this.setState(prev => ({
+        deletecat: prev.deletecat.concat(inputval)
+      }));
+    } else {
+      var temparr = this.state.deletecat.filter(item => {
+        return item !== inputval;
+      });
+
+      this.setState({
+        deletecat: temparr
+      });
+    }
+  }
+
+  deleteCategories() {
+    Meteor.call("catDelete", this.state.deletecat);
+  }
+
   render() {
     return (
       <div className="page-container animate">
@@ -12,6 +50,7 @@ class CategoryPage extends Component {
               <h1>Categories</h1>
               <div className="toolbar ">
                 <button
+                  onClick={this.deleteCategories.bind(this)}
                   className="btn btn-sm btn-white i-con-h-a"
                   data-toggle="tooltip"
                   title="Trash"
@@ -21,28 +60,23 @@ class CategoryPage extends Component {
                     <i />
                   </i>
                 </button>
-                <button
-                  className="btn btn-sm btn-white i-con-h-a sort "
-                  data-sort="item-title"
-                  data-toggle="tooltip"
-                  title="Sort"
-                >
-                  <i className="i-con i-con-sort text-muted">
-                    <i />
-                  </i>
-                </button>
-                <form className="flex">
+
+                <form className="flex" onSubmit={this.createNewCat.bind(this)}>
+                  <span className="text-danger">{this.state.caterror}</span>
                   <div className="input-group">
                     <input
                       type="text"
                       className="form-control form-control-sm search"
                       placeholder="Add Category"
-                      required
+                      value={this.state.catvalue}
+                      onChange={e =>
+                        this.setState({ catvalue: e.target.value })
+                      }
                     />
                     <span className="input-group-append">
                       <button
                         className="btn btn-white no-shadow btn-sm i-con-h-a"
-                        type="button"
+                        type="submit"
                       >
                         <i className="i-con i-con-plus text-muted" />
                       </button>
@@ -69,96 +103,31 @@ class CategoryPage extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className=" v-middle" data-id="6">
-                      <td>
-                        <label className="ui-check m-0 ">
-                          <input type="checkbox" name="id" value="6" />
-                          <i />
-                        </label>
-                      </td>
+                    {this.props.cats.map(item => {
+                      return (
+                        <tr className=" v-middle" key={item._id}>
+                          <td>
+                            <label className="ui-check m-0 ">
+                              <input
+                                type="checkbox"
+                                name="id"
+                                value={item._id}
+                                onChange={this.setCatDelete.bind(this)}
+                              />
+                              <i />
+                            </label>
+                          </td>
 
-                      <td className="flex">
-                        <a href="#" className="item-author ">
-                          Brittany Ryan
-                        </a>
-                      </td>
-                    </tr>
-
-                    <tr className=" v-middle" data-id="6">
-                      <td>
-                        <label className="ui-check m-0 ">
-                          <input type="checkbox" name="id" value="6" />
-                          <i />
-                        </label>
-                      </td>
-
-                      <td className="flex">
-                        <a href="#" className="item-author ">
-                          Brittany Ryan
-                        </a>
-                      </td>
-                    </tr>
-
-                    <tr className=" v-middle" data-id="6">
-                      <td>
-                        <label className="ui-check m-0 ">
-                          <input type="checkbox" name="id" value="6" />
-                          <i />
-                        </label>
-                      </td>
-
-                      <td className="flex">
-                        <a href="#" className="item-author ">
-                          Brittany Ryan
-                        </a>
-                      </td>
-                    </tr>
+                          <td className="flex">
+                            <a href="#" className="item-author ">
+                              {item.title}
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
-              </div>
-              <div className="d-flex">
-                <ul className="pagination">
-                  <li className="page-item disabled">
-                    <a className="page-link" href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                      <span className="sr-only">Previous</span>
-                    </a>
-                  </li>
-                  <li className="page-item active">
-                    <a className="page-link" href="#">
-                      1 <span className="sr-only">(current)</span>
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#">
-                      2
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#">
-                      3
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#">
-                      4
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#">
-                      5
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                      <span className="sr-only">Next</span>
-                    </a>
-                  </li>
-                </ul>
-                <small className="text-muted py-2 mx-2">
-                  Total <span id="count">15</span> items
-                </small>
               </div>
             </div>
           </div>
@@ -168,4 +137,8 @@ class CategoryPage extends Component {
   }
 }
 
-export default withRouter(CategoryPage);
+export default createContainer(() => {
+  Meteor.subscribe("categories.all");
+  const cats = Categories.find().fetch();
+  return { cats };
+}, CategoryPage);
