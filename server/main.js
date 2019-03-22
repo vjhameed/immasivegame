@@ -3,6 +3,8 @@ import Links from "/imports/api/links";
 import { Roles } from "meteor/alanning:roles";
 import "../imports/api/users/tasks";
 import "../imports/api/Categories/index";
+import "../imports/api/News/index";
+import "../imports/api/ImageFile/index";
 
 Accounts.onCreateUser((options, user) => {
   Meteor.setTimeout(function() {

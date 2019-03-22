@@ -1,24 +1,47 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import moment from "moment";
+import ImageFile from "../../api/ImageFile/model";
+import { Meteor } from "meteor/meteor";
+import { createContainer } from "meteor/react-meteor-data";
 
-export default class NewsItem extends Component {
-    render() {
-        return (
-            <div className="nk-news-box-item nk-news-box-item-active">
-                <div className="nk-news-box-item-img">
-                    <img src="https://cdn-html.nkdev.info/goodgames/assets/images/post-1-sm.jpg"
-                        alt="Smell magic in the air. Or maybe barbecue" />
-                </div>
-                <h3 className="nk-news-box-item-title">Smell magic in the air. Or maybe barbecue</h3>
-
-                <div className="nk-news-box-item-text">
-                    <p>With what mingled joy and sorrow do I take up the pen to write to my dearest friend! Oh, what a
-                      change between
-                      to-day and yesterday! Now I am friendless and alone...</p>
-                </div>
-                <div className="nk-news-box-item-date">
-                    <span className="fa fa-calendar"></span> Sep 18, 2018</div>
-            </div>
-
-        )
+class NewsItem extends Component {
+  state = { link: "" };
+  file = "";
+  renderImage() {
+    if (this.props.docsReadyYet && this.props.files) {
+      var link = ImageFile.findOne({ _id: this.props.data.image }).link();
+      this.file = link;
+      return link;
     }
+  }
+
+  render() {
+    const { title, desc, posted_at, id } = this.props.data;
+    console.log(this.file);
+    return (
+      <div className="nk-news-box-item nk-news-box-item-active">
+        <div className="nk-news-box-item-img">
+          <img src={this.renderImage()} />
+        </div>
+        <h3 className="nk-news-box-item-title">{title}</h3>
+
+        <div className="nk-news-box-item-text">
+          <p>{desc}</p>
+        </div>
+        <div className="nk-news-box-item-date">
+          <span className="fa fa-calendar" />{" "}
+          {moment(posted_at, "MM-DD-YYYY").format()}
+        </div>
+      </div>
+    );
+  }
 }
+
+export default createContainer(() => {
+  Meteor.subscribe("news.all");
+  const filesHandle = Meteor.subscribe("news.images.all");
+  const docsReadyYet = filesHandle.ready();
+  const files = ImageFile.find({}, { sort: { name: 1 } }).fetch();
+
+  return { docsReadyYet, files };
+}, NewsItem);
