@@ -68,10 +68,6 @@ class NewsPage extends Component {
           });
         });
 
-        uploadInstance.on("end", function(error, fileObj) {
-          console.log("On end File Object: ", fileObj);
-        });
-
         uploadInstance.on("uploaded", function(error, fileObj) {
           console.log("uploaded: ", fileObj);
 
@@ -91,14 +87,6 @@ class NewsPage extends Component {
               if (resp) console.log("yeah success");
             }
           );
-        });
-
-        uploadInstance.on("error", function(error, fileObj) {
-          console.log("Error during upload: " + error);
-        });
-
-        uploadInstance.on("progress", function(progress, fileObj) {
-          console.log("Upload Percentage: " + progress);
         });
 
         uploadInstance.start(); // Must manually start the upload
@@ -347,7 +335,7 @@ class NewsPage extends Component {
 export default createContainer(() => {
   Meteor.subscribe("news.all");
   const arts = News.find().fetch();
-  const filesHandle = Meteor.subscribe("news.images.all");
+  const filesHandle = Meteor.subscribe("images.all");
   const docsReadyYet = filesHandle.ready();
   const files = ImageFile.find({}, { sort: { name: 1 } }).fetch();
 
