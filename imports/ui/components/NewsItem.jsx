@@ -17,7 +17,7 @@ class NewsItem extends Component {
 
   render() {
     const { title, desc, posted_at, id } = this.props.data;
-    console.log(this.file);
+    console.log(this.props.files);
     return (
       <div className="nk-news-box-item nk-news-box-item-active">
         <div className="nk-news-box-item-img">
@@ -39,9 +39,10 @@ class NewsItem extends Component {
 
 export default createContainer(() => {
   Meteor.subscribe("news.all");
-  const filesHandle = Meteor.subscribe("news.images.all");
+  const arts = News.find().fetch();
+  const filesHandle = Meteor.subscribe("images.all");
   const docsReadyYet = filesHandle.ready();
   const files = ImageFile.find({}, { sort: { name: 1 } }).fetch();
 
-  return { docsReadyYet, files };
+  return { arts, docsReadyYet, files };
 }, NewsItem);

@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import News from "../../../api/News/model";
 import ImageFile from "../../../api/ImageFile/model";
-import { Meteor } from "meteor/meteor";
 import { createContainer } from "meteor/react-meteor-data";
 import moment from "moment";
+import Loader from "react-loader-spinner";
+
 class NewsPage extends Component {
   state = {
     modal: false,
@@ -44,6 +45,8 @@ class NewsPage extends Component {
       // there was multiple files selected
       var file = input.files[0];
 
+      console.log(file);
+      console.log(self.props.fileLocator);
       if (file) {
         let uploadInstance = ImageFile.insert(
           {
@@ -317,12 +320,21 @@ class NewsPage extends Component {
                     </div>
                   </div>
                 </div>
+                <Loader
+                  type="Ball-Triangle"
+                  color="#00BFFF"
+                  height="100"
+                  width="100"
+                  className="custom"
+                />
+                ) : (
                 <button
+                  type="submit"
                   className="btn btn-raised btn-wave mb-2 w-xs blue"
-                  onClick={this.createArticle.bind(this)}
                 >
                   Submit
                 </button>
+                )}
               </div>
             </div>
           </div>

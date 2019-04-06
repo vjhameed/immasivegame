@@ -1,15 +1,19 @@
 import React, { Component } from "react";
-import News from "../../../api/News/model";
-import ImageFile from "../../../api/ImageFile/model";
+import GameImages from "../../../api/GameImage/model";
+import GameFile from "../../../api/GameFile/model";
+import Games from "../../../api/Games/model";
+import Categories from "../../../api/Categories/model";
 import { Meteor } from "meteor/meteor";
 import { createContainer } from "meteor/react-meteor-data";
 import moment from "moment";
+import Loader from "react-loader-spinner";
 
 class GamesPage extends Component {
   state = {
     modal: false,
     title: "",
     desc: "",
+    gamecat: "",
     deleteart: [],
     inProgress: false
   };
@@ -34,10 +38,10 @@ class GamesPage extends Component {
 
   createArticle(e) {
     e.preventDefault();
-    this.uploadIt(this.fileinput);
+    this.uploadIt(this.imageinput, this.gameinput);
   }
 
-  uploadIt(input) {
+  uploadIt(input, gameinput) {
     let self = this;
 
     if (input.files && input.files[0]) {
@@ -46,7 +50,7 @@ class GamesPage extends Component {
       var file = input.files[0];
 
       if (file) {
-        let uploadInstance = ImageFile.insert(
+        let uploadInstance = GameImages.insert(
           {
             file: file,
             meta: {
@@ -60,50 +64,70 @@ class GamesPage extends Component {
           false
         );
 
-        // These are the event functions, don't need most of them, it shows where we are in the process
-        uploadInstance.on("start", function() {
-          console.log("Starting");
-
-          self.setState({
-            inProgress: true
-          });
-        });
-
-        uploadInstance.on("end", function(error, fileObj) {
-          console.log("On end File Object: ", fileObj);
-        });
-
         uploadInstance.on("uploaded", function(error, fileObj) {
-          console.log("uploaded: ", fileObj);
-
-          // Remove the filename from the upload box
-          self.fileinput.value = "";
-
-          // Reset our state for the next file
-          self.setState({
-            inProgress: false
-          });
-
-          Meteor.call(
-            "artCreate",
-            [self.state.title, self.state.desc, fileObj._id],
-            function(err, resp) {
-              if (err) self.setState({ arterror: err.error });
-              if (resp) console.log("yeah success");
+          self.setState(
+            {
+              imageobj: fileObj
+            },
+            () => {
+              self.createGame();
             }
           );
         });
 
-        uploadInstance.on("error", function(error, fileObj) {
-          console.log("Error during upload: " + error);
+        let gameInstance = GameFile.insert(
+          {
+            file: gameinput.files[0],
+            meta: {
+              locator: self.props.fileLocator,
+              userId: Meteor.userId() // Optional, used to check on server for file tampering
+            },
+            streams: "dynamic",
+            chunkSize: "dynamic",
+            allowWebWorkers: true // If you see issues with uploads, change this to false
+          },
+          false
+        );
+
+        gameInstance.on("end", function(error, gameobj) {
+          self.setState(
+            {
+              gameobj: gameobj
+            },
+            () => {
+              self.createGame();
+            }
+          );
         });
 
-        uploadInstance.on("progress", function(progress, fileObj) {
-          console.log("Upload Percentage: " + progress);
-        });
+        gameInstance.start();
 
         uploadInstance.start(); // Must manually start the upload
       }
+    }
+  }
+
+  createGame() {
+    if (this.state.gameobj && this.state.imageobj) {
+      Meteor.call("gameunzip", this.state.gameobj);
+      var self = this;
+      Meteor.call(
+        "gameCreate",
+        [
+          this.state.title,
+          this.state.desc,
+          this.state.gamecat,
+          this.state.imageobj._id,
+          this.state.gameobj._id
+        ],
+        function(err, resp) {
+          self.setState({
+            imageobj: "",
+            gameobj: "",
+            inProgress: false
+          });
+        }
+      );
     }
   }
 
@@ -126,14 +150,13 @@ class GamesPage extends Component {
   }
 
   deleteArticles() {
-    Meteor.call("artDelete", this.state.deleteart);
+    Meteor.call("gameDelete", this.state.deleteart);
   }
-
-  renderArticles() {
-    return this.props.arts.map(item => {
+  renderGames() {
+    return this.props.games.map(item => {
       var link = "";
       if (this.props.files && this.props.docsReadyYet) {
-        link = ImageFile.findOne({ _id: item.image }).link();
+        link = GameImages.findOne({ _id: item.image }).link();
       }
 
       return (
@@ -163,10 +186,17 @@ class GamesPage extends Component {
             </a>
             <div className="item-except text-muted h-1x">{item.desc}</div>
           </td>
+          <td>{item.category}</td>
 
           <td>{moment(item.posted_at, "MM-DD-YYYY").format()}</td>
         </tr>
       );
+    });
+  }
+
+  renderFormCats() {
+    return this.props.cats.map(item => {
+      return <option value={item.title}>{item.title}</option>;
     });
   }
 
@@ -217,39 +247,13 @@ class GamesPage extends Component {
                         Image
                       </th>
                       <th className="text-muted">Content</th>
+                      <th className="text-muted">Category</th>
                       <th className="text-muted" style={{ width: "20%" }}>
                         Posted At
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr className=" v-middle" data- id="6">
-                      <td>
-                        <label className="ui-check m-0 ">
-                          <input type="checkbox" name="id" />
-                          <i />
-                        </label>
-                      </td>
-                      <td>
-                        <a href="#">
-                          <span className="w-32 avatar circle bg-warning-lt">
-                            <img src="/public" alt="." />
-                          </span>
-                        </a>
-                      </td>
-
-                      <td className="flex">
-                        <a href="#" className="item-author ">
-                          Head title
-                        </a>
-                        <div className="item-except text-muted h-1x">
-                          Description
-                        </div>
-                      </td>
-
-                      <td>12:10:21</td>
-                    </tr>
-                  </tbody>
+                  <tbody>{this.renderGames()}</tbody>
                 </table>
               </div>
             </div>
@@ -272,7 +276,11 @@ class GamesPage extends Component {
               <div className="navbar white lt box-shadow d-flex">
                 <span className="text-md text-ellipsis">Add a new Game</span>
               </div>
-              <div className="p-3 b-t" id="chat-form">
+              <form
+                onSubmit={this.createArticle.bind(this)}
+                className="p-3 b-t"
+                id="chat-form"
+              >
                 <div className="form-group row">
                   <label className="col-sm-4 col-form-label">Title</label>
                   <div className="col-sm-8">
@@ -281,6 +289,7 @@ class GamesPage extends Component {
                       className="form-control"
                       value={this.state.title}
                       onChange={e => this.setState({ title: e.target.value })}
+                      required
                     />
                   </div>
                 </div>
@@ -292,7 +301,21 @@ class GamesPage extends Component {
                       className="form-control"
                       onChange={e => this.setState({ desc: e.target.value })}
                       value={this.state.desc}
+                      required
                     />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label className="col-sm-4 col-form-label">Category</label>
+                  <div className="col-sm-8">
+                    <select
+                      className="form-control"
+                      onChange={e => this.setState({ gamecat: e.target.value })}
+                      value={this.state.gamecat}
+                      required
+                    >
+                      {this.renderFormCats()}
+                    </select>
                   </div>
                 </div>
                 <div className="form-group row">
@@ -303,7 +326,8 @@ class GamesPage extends Component {
                         type="file"
                         className="custom-file-input"
                         id="customFile"
-                        ref={file => (this.fileinput = file)}
+                        ref={file => (this.imageinput = file)}
+                        required
                       />
                       <label className="custom-file-label" htmlFor="customFile">
                         Choose file
@@ -319,7 +343,8 @@ class GamesPage extends Component {
                         type="file"
                         className="custom-file-input"
                         id="customFile"
-                        ref={file => (this.fileinput = file)}
+                        ref={file => (this.gameinput = file)}
+                        required
                       />
                       <label className="custom-file-label" htmlFor="customFile">
                         Choose file
@@ -327,14 +352,23 @@ class GamesPage extends Component {
                     </div>
                   </div>
                 </div>
-
-                <button
-                  className="btn btn-raised btn-wave mb-2 w-xs blue"
-                  onClick={this.createArticle.bind(this)}
-                >
-                  Submit
-                </button>
-              </div>
+                {this.state.inProgress == true ? (
+                  <Loader
+                    type="Ball-Triangle"
+                    color="#00BFFF"
+                    height="100"
+                    width="100"
+                    className="custom"
+                  />
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-raised btn-wave mb-2 w-xs blue"
+                  >
+                    Submit
+                  </button>
+                )}
+              </form>
             </div>
           </div>
         </div>
@@ -345,10 +379,15 @@ class GamesPage extends Component {
 
 export default createContainer(() => {
   Meteor.subscribe("games.all");
-  const arts = News.find().fetch();
-  const filesHandle = Meteor.subscribe("images.all");
+  Meteor.subscribe("categories.all");
+  const cats = Categories.find().fetch();
+  const games = Games.find().fetch();
+  const filesHandle = Meteor.subscribe("game.images.all");
   const docsReadyYet = filesHandle.ready();
-  const files = ImageFile.find({}, { sort: { name: 1 } }).fetch();
+  const files = GameImages.find({}, { sort: { name: 1 } }).fetch();
+  const gamefilesHandle = Meteor.subscribe("game.files.all");
+  const gamedocsReadyYet = gamefilesHandle.ready();
+  const gamefiles = GameFile.find({}, { sort: { name: 1 } }).fetch();
 
-  return { arts, docsReadyYet, files };
+  return { games, docsReadyYet, files, gamefiles, gamedocsReadyYet, cats };
 }, GamesPage);

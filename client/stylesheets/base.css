@@ -264,9 +264,12 @@ a:hover {
   margin-left: 15px;
 }
 
+.has-error {
+  font-size: 0.8em;
+  text-transform: initial;
+  margin-top: 4px;
+}
 
-.has-error{
-      font-size: 0.8em;
-    text-transform: initial;
-    margin-top: 4px;
+.nano-content .nk-news-box-item .nk-news-box-item-img img {
+  height: 72px;
 }

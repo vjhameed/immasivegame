@@ -4,6 +4,8 @@ import "../imports/api/users/tasks";
 import "../imports/api/Categories/index";
 import "../imports/api/News/index";
 import "../imports/api/Games/index";
+import "../imports/api/GameImage/index";
+import "../imports/api/GameFile/index";
 import "../imports/api/ImageFile/index";
 
 Accounts.onCreateUser((options, user) => {

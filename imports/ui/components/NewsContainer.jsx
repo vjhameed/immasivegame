@@ -23,7 +23,6 @@ class NewsContainer extends Component {
   }
 
   newsItemClicked(data, link) {
-    console.log("sindie news item clicked");
     this.setState({
       data,
       link
@@ -47,9 +46,8 @@ class NewsContainer extends Component {
 }
 
 export default createContainer(() => {
-  Meteor.subscribe("news.all");
+  const filesHandle = Meteor.subscribe("news.all");
   const arts = News.find().fetch();
-  const filesHandle = Meteor.subscribe("news.images.all");
   const docsReadyYet = filesHandle.ready();
   const files = ImageFile.find({}, { sort: { name: 1 } }).fetch();
 
