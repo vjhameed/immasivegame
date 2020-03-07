@@ -66,7 +66,7 @@ export default class Header extends Component {
                 FAQ
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" href="#">
                 SUPPORT
               </a>
@@ -75,11 +75,11 @@ export default class Header extends Component {
               <a className="nav-link" href="#">
                 CONTACT
               </a>
-            </li>
+            </li> */}
             <li className="nav-item ml-auto">
-              <button type="button" className="btn glory-header-button button">
-                UPLOAD GAMES
-              </button>
+              <Link className="btn glory-header-button button" to="/dashboard">
+                Upload Now
+              </Link>
             </li>
             <Authentication />
           </ul>

@@ -4,14 +4,15 @@ import ImageFile from "../../../api/ImageFile/model";
 import { createContainer } from "meteor/react-meteor-data";
 import moment from "moment";
 import Loader from "react-loader-spinner";
-
+import message from "antd/lib/message";
 class NewsPage extends Component {
   state = {
     modal: false,
     title: "",
     desc: "",
     deleteart: [],
-    inProgress: false
+    inProgress: false,
+    artimage: null
   };
 
   componentWillMount() {
@@ -32,68 +33,73 @@ class NewsPage extends Component {
     }
   }
 
-  createArticle(e) {
-    e.preventDefault();
-    this.uploadIt(this.fileinput);
+  createArticle() {
+    if (!this.state.artimage)
+      message.error("Please select an image for the article");
+    else if (!this.state.title)
+      message.error("Please enter a title for the article");
+    else if (!this.state.desc)
+      message.error("Please enter a description for the article");
+    else this.uploadIt();
   }
 
-  uploadIt(input) {
+  uploadIt() {
     let self = this;
 
-    if (input.files && input.files[0]) {
-      // We upload only one file, in case
-      // there was multiple files selected
-      var file = input.files[0];
+    this.setState({ inProgress: true });
 
-      console.log(file);
-      console.log(self.props.fileLocator);
-      if (file) {
-        let uploadInstance = ImageFile.insert(
-          {
-            file: file,
-            meta: {
-              locator: self.props.fileLocator,
-              userId: Meteor.userId() // Optional, used to check on server for file tampering
-            },
-            streams: "dynamic",
-            chunkSize: "dynamic",
-            allowWebWorkers: true // If you see issues with uploads, change this to false
-          },
-          false
+    // We upload only one file, in case
+    // there was multiple files selected
+    var file = this.state.artimage;
+
+    if (file) {
+      let uploadInstance = ImageFile.insert(
+        {
+          file: file,
+          streams: "dynamic",
+          chunkSize: "dynamic",
+          allowWebWorkers: true // If you see issues with uploads, change this to false
+        },
+        false
+      );
+
+      // These are the event functions, don't need most of them, it shows where we are in the process
+      uploadInstance.on("start", function() {
+        console.log("Starting");
+
+        self.setState({
+          inProgress: true
+        });
+      });
+
+      uploadInstance.on("uploaded", function(error, fileObj) {
+        console.log("uploaded: ", fileObj);
+
+        // Remove the filename from the upload box
+
+        // Reset our state for the next file
+        self.setState({
+          inProgress: false
+        });
+
+        Meteor.call(
+          "artCreate",
+          [self.state.title, self.state.desc, fileObj._id],
+          function(err, resp) {
+            if (err) self.setState({ arterror: err.error });
+            if (resp)
+              self.setState({
+                inProgress: false,
+                modal: false,
+                title: null,
+                desc: null,
+                artimage: null
+              });
+          }
         );
+      });
 
-        // These are the event functions, don't need most of them, it shows where we are in the process
-        uploadInstance.on("start", function() {
-          console.log("Starting");
-
-          self.setState({
-            inProgress: true
-          });
-        });
-
-        uploadInstance.on("uploaded", function(error, fileObj) {
-          console.log("uploaded: ", fileObj);
-
-          // Remove the filename from the upload box
-          self.fileinput.value = "";
-
-          // Reset our state for the next file
-          self.setState({
-            inProgress: false
-          });
-
-          Meteor.call(
-            "artCreate",
-            [self.state.title, self.state.desc, fileObj._id],
-            function(err, resp) {
-              if (err) self.setState({ arterror: err.error });
-              if (resp) console.log("yeah success");
-            }
-          );
-        });
-
-        uploadInstance.start(); // Must manually start the upload
-      }
+      uploadInstance.start(); // Must manually start the upload
     }
   }
 
@@ -121,11 +127,6 @@ class NewsPage extends Component {
 
   renderArticles() {
     return this.props.arts.map(item => {
-      var link = "";
-      if (this.props.files && this.props.docsReadyYet) {
-        link = ImageFile.findOne({ _id: item.image }).link();
-      }
-
       return (
         <tr className=" v-middle" data- id="6" key={item._id}>
           <td>
@@ -142,7 +143,7 @@ class NewsPage extends Component {
           <td>
             <a href="#">
               <span className="w-32 avatar circle bg-warning-lt">
-                <img src={link} alt="." />
+                <img src={item.image} alt="." />
               </span>
             </a>
           </td>
@@ -304,7 +305,7 @@ class NewsPage extends Component {
                 </div>
                 <div className="form-group row">
                   <label className="col-sm-4 col-form-label">
-                    File browser
+                    Article Image
                   </label>
                   <div className="col-sm-8">
                     <div className="custom-file">
@@ -312,7 +313,9 @@ class NewsPage extends Component {
                         type="file"
                         className="custom-file-input"
                         id="customFile"
-                        ref={file => (this.fileinput = file)}
+                        onChange={e =>
+                          this.setState({ artimage: e.target.files[0] })
+                        }
                       />
                       <label className="custom-file-label" htmlFor="customFile">
                         Choose file
@@ -320,20 +323,22 @@ class NewsPage extends Component {
                     </div>
                   </div>
                 </div>
-                <Loader
-                  type="Ball-Triangle"
-                  color="#00BFFF"
-                  height="100"
-                  width="100"
-                  className="custom"
-                />
+                {this.state.inProgress == true ? (
+                  <Loader
+                    type="Ball-Triangle"
+                    color="#00BFFF"
+                    height="100"
+                    width="100"
+                    className="custom"
+                  />
                 ) : (
-                <button
-                  type="submit"
-                  className="btn btn-raised btn-wave mb-2 w-xs blue"
-                >
-                  Submit
-                </button>
+                  <button
+                    type="submit"
+                    className="btn btn-raised btn-wave mb-2 w-xs blue"
+                    onClick={() => this.createArticle()}
+                  >
+                    Submit
+                  </button>
                 )}
               </div>
             </div>

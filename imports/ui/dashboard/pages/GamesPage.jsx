@@ -7,6 +7,9 @@ import { Meteor } from "meteor/meteor";
 import { createContainer } from "meteor/react-meteor-data";
 import moment from "moment";
 import Loader from "react-loader-spinner";
+import axios from "axios";
+import message from "antd/lib/message";
+import CheckboxGroup from "antd/lib/checkbox/Group";
 
 class GamesPage extends Component {
   state = {
@@ -14,6 +17,8 @@ class GamesPage extends Component {
     title: "",
     desc: "",
     gamecat: "",
+    gamefile: null,
+    gameimage: null,
     deleteart: [],
     inProgress: false
   };
@@ -38,97 +43,106 @@ class GamesPage extends Component {
 
   createArticle(e) {
     e.preventDefault();
-    this.uploadIt(this.imageinput, this.gameinput);
+    console.log(this.state);
+    if (!this.state.gameimage)
+      message.error("Please select an image for the game");
+    else if (!this.state.title)
+      message.error("Please enter a title for the game");
+    else if (!this.state.gamecat)
+      message.error("Please select a category for the game");
+    else if (!this.state.gamefile)
+      message.error("Please a zip file of the game");
+    else if (!this.state.desc)
+      message.error("Please enter a description of the game");
+    else this.createGame();
   }
 
-  uploadIt(input, gameinput) {
-    let self = this;
+  uploadImage() {
+    const upload = GameImages.insert(
+      {
+        file: this.state.gameimage,
+        streams: "dynamic",
+        chunkSize: "dynamic"
+      },
+      false
+    );
+    upload.on("start", function() {});
 
-    if (input.files && input.files[0]) {
-      // We upload only one file, in case
-      // there was multiple files selected
-      var file = input.files[0];
+    var endProm = new Promise((res, rej) => {
+      upload.on("end", function(error, fileObj) {
+        console.log(fileObj);
+        console.log(error);
 
-      if (file) {
-        let uploadInstance = GameImages.insert(
-          {
-            file: file,
-            meta: {
-              locator: self.props.fileLocator,
-              userId: Meteor.userId() // Optional, used to check on server for file tampering
-            },
-            streams: "dynamic",
-            chunkSize: "dynamic",
-            allowWebWorkers: true // If you see issues with uploads, change this to false
-          },
-          false
-        );
-
-        uploadInstance.on("uploaded", function(error, fileObj) {
-          self.setState(
-            {
-              imageobj: fileObj
-            },
-            () => {
-              self.createGame();
-            }
-          );
-        });
-
-        let gameInstance = GameFile.insert(
-          {
-            file: gameinput.files[0],
-            meta: {
-              locator: self.props.fileLocator,
-              userId: Meteor.userId() // Optional, used to check on server for file tampering
-            },
-            streams: "dynamic",
-            chunkSize: "dynamic",
-            allowWebWorkers: true // If you see issues with uploads, change this to false
-          },
-          false
-        );
-
-        gameInstance.on("end", function(error, gameobj) {
-          self.setState(
-            {
-              gameobj: gameobj
-            },
-            () => {
-              self.createGame();
-            }
-          );
-        });
-
-        gameInstance.start();
-
-        uploadInstance.start(); // Must manually start the upload
-      }
-    }
-  }
-
-  createGame() {
-    if (this.state.gameobj && this.state.imageobj) {
-      Meteor.call("gameunzip", this.state.gameobj);
-      var self = this;
-      Meteor.call(
-        "gameCreate",
-        [
-          this.state.title,
-          this.state.desc,
-          this.state.gamecat,
-          this.state.imageobj._id,
-          this.state.gameobj._id
-        ],
-        function(err, resp) {
-          self.setState({
-            imageobj: "",
-            gameobj: "",
-            inProgress: false
-          });
+        if (error) {
+          rej(error);
+        } else {
+          res(fileObj._id);
         }
-      );
-    }
+      });
+    });
+
+    upload.start();
+
+    return endProm;
+  }
+
+  uploadGame() {
+    var form = new FormData();
+    form.append("gamefile", this.state.gamefile);
+    // https://immasivegameupload.herokuapp.com/uploadgame
+
+    return axios
+      .post("http://localhost:5000/uploadgame", form, {
+        headers: {
+          accept: "application/json",
+          "Accept-Language": "en-US,en;q=0.8",
+          "Content-Type": `multipart/form-data;`
+        }
+      })
+      .then(response => {
+        console.log(response);
+        return response.data.link;
+      })
+      .catch(error => {
+        //handle error
+      });
+  }
+
+  async createGame() {
+    var self = this;
+    this.setState({
+      inProgress: true
+    });
+
+    const gameimage = await this.uploadImage()
+      .then(res => res)
+      .catch(err => message.error(err));
+    const gamelink = await this.uploadGame()
+      .then(res => res)
+      .catch(err => message.error(err));
+    Meteor.call(
+      "gameCreate",
+      [
+        this.state.title,
+        this.state.desc,
+        this.state.gamecat,
+        gameimage,
+        gamelink
+      ],
+      function(err, resp) {
+        self.setState({
+          imageobj: "",
+          gameobj: "",
+          title: "",
+          desc: "",
+          gamecat: "",
+          gamefile: "",
+          gameimage: "",
+          inProgress: false,
+          modal: false
+        });
+      }
+    );
   }
 
   setArtDelete(e) {
@@ -154,11 +168,6 @@ class GamesPage extends Component {
   }
   renderGames() {
     return this.props.games.map(item => {
-      var link = "";
-      if (this.props.files && this.props.docsReadyYet) {
-        link = GameImages.findOne({ _id: item.image }).link();
-      }
-
       return (
         <tr className=" v-middle" data- id="6" key={item._id}>
           <td>
@@ -175,7 +184,7 @@ class GamesPage extends Component {
           <td>
             <a href="#">
               <span className="w-32 avatar circle bg-warning-lt">
-                <img src={link} alt="." />
+                <img src={item.image} alt="." />
               </span>
             </a>
           </td>
@@ -326,11 +335,15 @@ class GamesPage extends Component {
                         type="file"
                         className="custom-file-input"
                         id="customFile"
-                        ref={file => (this.imageinput = file)}
+                        onChange={e =>
+                          this.setState({ gameimage: e.target.files[0] })
+                        }
                         required
                       />
                       <label className="custom-file-label" htmlFor="customFile">
-                        Choose file
+                        {this.state.gameimage
+                          ? this.state.gameimage.name
+                          : "Choose file"}
                       </label>
                     </div>
                   </div>
@@ -343,11 +356,15 @@ class GamesPage extends Component {
                         type="file"
                         className="custom-file-input"
                         id="customFile"
-                        ref={file => (this.gameinput = file)}
+                        onChange={e =>
+                          this.setState({ gamefile: e.target.files[0] })
+                        }
                         required
                       />
                       <label className="custom-file-label" htmlFor="customFile">
-                        Choose file
+                        {this.state.gamefile
+                          ? this.state.gamefile.name
+                          : "Choose file"}
                       </label>
                     </div>
                   </div>

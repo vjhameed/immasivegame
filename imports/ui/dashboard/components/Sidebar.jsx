@@ -28,7 +28,7 @@ class Sidebar extends Component {
                   <span>Main</span>
                 </li>
                 <li>
-                  <Link to={"/dash"} className="i-con-h-a">
+                  <Link to={"/dashboard"} className="i-con-h-a">
                     <span className="nav-icon">
                       <i className="i-con i-con-home">
                         <i />
@@ -38,7 +38,7 @@ class Sidebar extends Component {
                   </Link>
                 </li>
                 <li>
-                  <Link to={"/dash/categories"}>
+                  <Link to={"/dashboard/categories"}>
                     <span className="nav-icon">
                       <i className="i-con i-con-grid">
                         <i />
@@ -48,7 +48,7 @@ class Sidebar extends Component {
                   </Link>
                 </li>
                 <li>
-                  <Link to={"/dash/games"}>
+                  <Link to={"/dashboard/games"}>
                     <span className="nav-icon">
                       <i className="i-con i-con-grid">
                         <i />
@@ -58,7 +58,7 @@ class Sidebar extends Component {
                   </Link>
                 </li>
                 <li>
-                  <Link to={"/dash/news"}>
+                  <Link to={"/dashboard/news"}>
                     <span className="nav-icon">
                       <i className="i-con i-con-grid">
                         <i />

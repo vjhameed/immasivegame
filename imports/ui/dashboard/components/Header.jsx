@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { Link } from "react-router-dom";
 export default class Header extends Component {
   render() {
     return (
@@ -15,9 +15,9 @@ export default class Header extends Component {
           >
             <i className="i-con i-con-menu text-muted" />
           </a>
-          <a href="index.html" className="navbar-brand">
+          <Link className="navbar-brand">
             <img src="/img/loxify_web.png" style={{ height: "30px" }} />
-          </a>
+          </Link>
           <div
             className="collapse navbar-collapse order-2 order-lg-1"
             id="navbarToggler"

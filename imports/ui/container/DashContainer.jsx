@@ -25,14 +25,22 @@ class DashContainer extends Component {
           <div>
             <Header />
 
-            <div id="main" className="layout-row flex">
+            <div
+              id="main"
+              className="layout-row flex"
+              style={{ height: "100vh" }}
+            >
               <Sidebar />
 
               <div id="content" className="flex ">
-                <Route exact path="/dash" component={IndexPage} />
-                <Route exact path="/dash/categories" component={CategoryPage} />
-                <Route exact path="/dash/games" component={GamesPage} />
-                <Route exact path="/dash/news" component={NewsPage} />
+                <Route exact path="/dashboard" component={IndexPage} />
+                <Route
+                  exact
+                  path="/dashboard/categories"
+                  component={CategoryPage}
+                />
+                <Route exact path="/dashboard/games" component={GamesPage} />
+                <Route exact path="/dashboard/news" component={NewsPage} />
               </div>
             </div>
           </div>

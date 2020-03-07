@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { Route, Link } from "react-router-dom";
-
+import { createContainer } from "meteor/react-meteor-data";
+import moment from "moment";
 class IndexPage extends Component {
   render() {
     return (
@@ -61,7 +62,7 @@ class IndexPage extends Component {
                           <i />
                         </label>
                       </th>
-                      <th className="text-muted">Image</th>
+                      {/* <th className="text-muted">Image</th> */}
                       <th
                         className="text-muted sortable"
                         data-toggle-className="asc"
@@ -73,40 +74,44 @@ class IndexPage extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className=" v-middle" data-id="5">
-                      <td>
-                        <label className="ui-check m-0 ">
-                          <input type="checkbox" name="id" value="5" />
-                          <i />
-                        </label>
-                      </td>
+                    {this.props.users.map(item => (
+                      <tr className=" v-middle" data-id="5">
+                        <td>
+                          <label className="ui-check m-0 ">
+                            <input type="checkbox" name="id" value="5" />
+                            <i />
+                          </label>
+                        </td>
 
-                      <td>
-                        <a href="#">
-                          <span className="w-32 avatar circle bg-warning-lt">
-                            <img src="/img/a5.jpg" alt="." />
+                        {/* <td>
+                         <a href="#">
+                           <span className="w-32 avatar circle bg-warning-lt">
+                             <img src="/img/a5.jpg" alt="." />
+                           </span>
+                         </a>
+                       </td> */}
+
+                        <td className="flex">
+                          <a href="#" className="item-author ">
+                            {item.emails[0].address}
+                          </a>
+                        </td>
+
+                        <td>
+                          <span className="item-amount text-sm ">
+                            {moment(item.createdAt).format("MM DD YYYY")}
                           </span>
-                        </a>
-                      </td>
+                        </td>
 
-                      <td className="flex">
-                        <a href="#" className="item-author ">
-                          Scott Ortega
-                        </a>
-                      </td>
-
-                      <td>
-                        <span className="item-amount text-sm ">10-10-19</span>
-                      </td>
-
-                      <td>
-                        <span className="item-amount text-sm ">3</span>
-                      </td>
-                    </tr>
+                        <td>
+                          <span className="item-amount text-sm ">0</span>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
-              <div className="d-flex">
+              {/* <div className="d-flex">
                 <ul className="pagination">
                   <li className="page-item disabled">
                     <a className="page-link" href="#" aria-label="Previous">
@@ -149,7 +154,7 @@ class IndexPage extends Component {
                 <small className="text-muted py-2 mx-2">
                   Total <span id="count">15</span> items
                 </small>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -158,4 +163,11 @@ class IndexPage extends Component {
   }
 }
 
-export default withRouter(IndexPage);
+const withRoute = withRouter(IndexPage);
+
+export default createContainer(() => {
+  Meteor.subscribe("users.all");
+  const users = Meteor.users.find({}).fetch();
+
+  return { users };
+}, withRoute);

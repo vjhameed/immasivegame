@@ -54,12 +54,12 @@ class Authentication extends Component {
           logerror: err.reason
         });
       } else {
-        const id = Meteor.userId();
-        if (Roles.userIsInRole(id, "simple-new-user"))
-          this.props.history.push("/user");
-        else if (Roles.userIsInRole(id, "admin"))
-          this.props.history.push("/dash");
-        else console.log("not in roles");
+        // const id = Meteor.userId();
+        // if (Roles.userIsInRole(id, "simple-new-user"))
+        //   this.props.history.push("/user");
+        // else if (Roles.userIsInRole(id, "admin"))
+        this.props.history.push("/dashboard");
+        // else console.log("not in roles");
       }
     });
   };
@@ -76,12 +76,13 @@ class Authentication extends Component {
             reserror: err.reason
           });
         } else {
-          const id = Meteor.userId();
-          if (Roles.userIsInRole(id, "simple-new-user"))
-            this.props.history.push("/user");
-          else if (Roles.userIsInRole(id, "admin"))
-            this.props.history.push("/dash");
-          else console.log("not in roles");
+          // const id = Meteor.userId();
+          // if (Roles.userIsInRole(id, "simple-new-user"))
+          //   this.props.history.push("/user");
+          // else if (Roles.userIsInRole(id, "admin"))
+          //   this.props.history.push("/dash");
+          // else console.log("not in roles");
+          this.props.history.push("/dashboard");
         }
       }
     );

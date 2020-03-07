@@ -1,13 +1,15 @@
 import News from "./model";
 import { Meteor } from "meteor/meteor";
-
+import ImageFile from "../ImageFile/model";
 Meteor.methods({
   artCreate(data) {
     if (data != "") {
+      const imagepath = ImageFile.findOne({ _id: data[2] }).link();
+
       News.insert({
         title: data[0],
         desc: data[1],
-        image: data[2],
+        image: imagepath,
         posted_at: new Date()
       });
 

@@ -7,6 +7,8 @@ import {
   withRouter,
   Switch
 } from "react-router-dom";
+import "antd/dist/antd.css";
+
 import AppContainer from "../ui/container/AppContainer";
 import PrivateRoute from "../ui/components/PrivateRoute";
 import DashContainer from "../ui/container/DashContainer";
@@ -19,8 +21,8 @@ export default class RenderRoutes extends Component {
       <Router onUpdate={() => window.scrollTo(0, 0)}>
         <ScrollToTop>
           <Switch>
-            <PrivateRoute path="/dash" component={DashContainer} />
-            <PrivateRoute path="/user" component={UserContainer} />
+            <PrivateRoute path="/dashboard" component={DashContainer} />
+            {/* <PrivateRoute path="/user" component={UserContainer} /> */}
             <Route path="/" component={AppContainer} />
           </Switch>
         </ScrollToTop>

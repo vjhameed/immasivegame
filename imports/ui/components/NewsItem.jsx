@@ -7,21 +7,14 @@ import { createContainer } from "meteor/react-meteor-data";
 class NewsItem extends Component {
   state = { link: "" };
   file = "";
-  renderImage() {
-    if (this.props.docsReadyYet && this.props.files) {
-      var link = ImageFile.findOne({ _id: this.props.data.image }).link();
-      this.file = link;
-      return link;
-    }
-  }
 
   render() {
-    const { title, desc, posted_at, id } = this.props.data;
+    const { title, desc, posted_at, image, id } = this.props.data;
     console.log(this.props.files);
     return (
       <div className="nk-news-box-item nk-news-box-item-active">
         <div className="nk-news-box-item-img">
-          <img src={this.renderImage()} />
+          <img src={image} />
         </div>
         <h3 className="nk-news-box-item-title">{title}</h3>
 
